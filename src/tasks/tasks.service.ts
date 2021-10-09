@@ -23,4 +23,8 @@ export class TasksService {
     console.log(task.id);
     return task;
   }
+
+  getTaskById(id: string): Task {
+    return this.tasks.find((task) => task.id == id);
+  }
 }
