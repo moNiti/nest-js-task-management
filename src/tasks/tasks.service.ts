@@ -27,14 +27,16 @@ export class TasksService {
     }
     return task;
   }
-  // deleteTaskById(id: string): Task[] {
-  //   const updateTask = this.tasks.filter((task) => task.id != id);
-  //   if (updateTask.length === this.tasks.length) {
-  //     throw new NotFoundException(`Task with id ${id} not found`);
-  //   }
-  //   this.tasks = updateTask;
-  //   return this.tasks;
-  // }
+  async deleteTaskById(id: string): Promise<void> {
+    //  You have 2 methods to provide delete
+    // Delete not check the entity exist in the database
+    // Remove -> pass the object -> so you can guarantee the your entity exist
+    const result = await this.taskRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+  }
+
   // updateTaskStatusById(
   //   id: string,
   //   updateTaskStatusDto: UpdateTaskStatusDto,
