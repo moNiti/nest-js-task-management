@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { Task } from './task.entity';
 import { TaskRepository } from './task.repository';
 
@@ -37,28 +38,19 @@ export class TasksService {
     }
   }
 
-  // updateTaskStatusById(
-  //   id: string,
-  //   updateTaskStatusDto: UpdateTaskStatusDto,
-  // ): Task {
-  //   let updatedTask: Task;
-  //   let isUpdated = false;
-  //   const { status } = updateTaskStatusDto;
-  //   const newsTasks = this.tasks.map((task) => {
-  //     if (task.id === id) {
-  //       updatedTask = { ...task, status: status };
-  //       isUpdated = true;
-  //       return updatedTask;
-  //     } else {
-  //       return task;
-  //     }
-  //   });
-  //   if (!isUpdated) {
-  //     throw new NotFoundException(`Task with id ${id} not found`);
-  //   }
-  //   this.tasks = newsTasks;
-  //   return updatedTask;
-  // }
+  async updateTaskStatusById(
+    id: string,
+    updateTaskStatusDto: UpdateTaskStatusDto,
+  ): Promise<void> {
+    const { status } = updateTaskStatusDto;
+
+    const result = await this.taskRepository.update(id, { status: status });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+  }
+
   // getTasksWithFilters(filtersDto: GetTasksFilterDto): Task[] {
   //   const { search, status } = filtersDto;
   //   return this.tasks.filter((task) => {
